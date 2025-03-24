@@ -1,0 +1,51 @@
+{
+  "collections": {
+    "users": {
+      "documents": {
+        "user1": {
+          "name": "John Doe",
+          "age": 35,
+          "test": "test",
+          "address": {
+            "street": "123 Main St",
+            "city": "New York",
+            "found": "true",
+            "postalcode": "nothin"
+          }
+        },
+        "user2": {
+          "name": "Jane Doe",
+          "age": 28,
+          "address": {
+            "street": "456 Elm St",
+            "city": "Los Angeles"
+          }
+        },
+        "testing": {
+          "name": "testmedasda"
+        }
+      }
+    },
+    "products": {
+      "documents": {
+        "product1": {
+          "name": "Laptop",
+          "price": 1200,
+          "stock": 10
+        },
+        "product2": {
+          "name": "Phone",
+          "price": 800,
+          "stock": 20
+        }
+      }
+    },
+    "TVShows": {
+      "documents": {
+        "StarGateSG1": {
+          "Actors": "Richard Dean Anderson, Amanda Tapping"
+        }
+      }
+    }
+  }
+}
