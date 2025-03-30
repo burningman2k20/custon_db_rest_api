@@ -5,25 +5,30 @@
         "user1": {
           "name": "John Doe",
           "age": 35,
-          "test": "test",
           "address": {
             "street": "123 Main St",
             "city": "New York",
             "found": "true",
-            "postalcode": "nothin"
+            "postalcode": "nothin",
+            "test": true
+          },
+          "test": "hello",
+          "testing1": "bye",
+          "testing32": true,
+          "testOBJ": {
+            "da": 33
           }
         },
         "user2": {
           "name": "Jane Doe",
-          "age": 28,
+          "age": "281",
           "address": {
             "street": "456 Elm St",
-            "city": "Los Angeles"
+            "city": "Los Angeles",
+            "test": 444234,
+            "test2": false,
+            "test3": false
           }
-        },
-        "testing": {
-          "name": "testmedasda",
-          "testdata": "Tes"
         }
       }
     },
@@ -32,7 +37,8 @@
         "product1": {
           "name": "Laptop",
           "price": 1200,
-          "stock": 10
+          "stock": 10,
+          "test": "true"
         },
         "product2": {
           "name": "Phone",

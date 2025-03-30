@@ -4,6 +4,8 @@ const axios = require("axios");
 const fs = require('fs');
 const os = require("os");
 const path = require('path');
+const diskusage = require("diskusage-ng");
+const checkDiskSpace = require('check-disk-space').default
 
 const multer = require("multer");
 
@@ -19,6 +21,11 @@ const dbFilePath = path.join(__dirname, 'db.json');
 const usersFilePath = path.join(__dirname, 'users.json');
 
 const uploadDir = path.join(__dirname, "fileStorage");
+
+const storagePath = "/"; // Root directory (change if needed)
+
+// 🔹 Define storage limit per user (e.g., 1GB = 1 * 1024 * 1024 * 1024 bytes)
+const USER_STORAGE_LIMIT = 1 * 1024 * 1024 * 1024;
 
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
@@ -40,7 +47,44 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+// 📌 Function to get the size of a file
+function getFileSize(filePath) {
+    try {
+        const stats = fs.statSync(filePath);
+        return stats.size; // Returns file size in bytes
+    } catch (error) {
+        console.error("Error getting file size:", error);
+        return 0;
+    }
+}
+
+// 🔹 Function to get total storage used by a user
+const getUserStorageUsage = (userId) => {
+    const userFolder = path.join(uploadDir, userId);
+    if (!fs.existsSync(userFolder)) return 0;
+
+    return fs.readdirSync(userFolder).reduce((total, file) => {
+        const filePath = path.join(userFolder, file);
+        const stats = fs.statSync(filePath);
+        return total + stats.size;
+    }, 0);
+};
+
+
+// const upload = multer({ storage });
+const upload = multer({
+    storage,
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limit each file to 50MB
+    fileFilter: (req, file, cb) => {
+        const userStorageUsed = getUserStorageUsage(req.user.id);
+        const fileSize = req.headers["content-length"];
+
+        if (userStorageUsed + Number(fileSize) > USER_STORAGE_LIMIT) {
+            return cb(new Error("Storage limit exceeded"), false);
+        }
+        cb(null, true);
+    }
+});
 
 app.use(express.json());
 app.use(cors());
@@ -70,6 +114,31 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+// 🔹 API: Get User Storage Usage
+app.get("/user/storage", authenticateToken, (req, res) => {
+    const usedStorage = getUserStorageUsage(req.user.id);
+    res.json({
+        used: usedStorage,
+        limit: USER_STORAGE_LIMIT,
+        available: USER_STORAGE_LIMIT - usedStorage
+    });
+});
+
+// // 📌 API Route to Get Storage Info
+// app.get("/storage", (req, res) => {
+//     const storageInfo = getAvailableStorage();
+//     res.json({
+//         totalSpace: storageInfo.total,
+//         availableSpace: storageInfo.available,
+//     });
+// });
+
+// 📌 API Route to Get File Size
+app.get("/filesize/:filename", authenticateToken, (req, res) => {
+    const filePath = path.join(uploadDir, req.user.id, req.params.filename); // Change "uploads" to your actual directory
+    const fileSize = getFileSize(filePath);
+    res.json({ file: req.params.filename, size: fileSize });
+});
 
 // Upload file
 app.post("/upload", authenticateToken, upload.single("file"), (req, res) => {
@@ -214,6 +283,25 @@ app.get('/collections', authenticateToken, (req, res) => {
     res.json(Object.keys(data.collections));
 });
 
+
+// Update a document
+app.put("/collections/:name/:docId", authenticateToken, (req, res) => {
+    const db = readFile('./users/' + req.user.id + '/db.json');
+    //loadDB();
+    if (!db[req.params.name]) db[req.params.name] = {};
+    db[req.params.name][req.params.docId] = req.body;
+    // saveDB(db);
+    writeFile('./users/' + req.user.id + '/db.json', db);
+    res.json({ success: true });
+});
+
+// // Get subcollections
+// app.get("/collections/:name/:subCollection", authenticateToken, (req, res) => {
+//     const db = readFile('./users/' + req.user.id + '/db.json');
+//     //loadDB();
+//     const collection = db[req.params.name] || {};
+//     res.json(collection[req.params.subCollection] || {});
+// });
 // Create a new collection
 // app.post('/collections/:name', (req, res) => {
 //     const data = readFile('./users/' + req.user.id + '/db.json');
@@ -288,13 +376,29 @@ app.delete('/collections/:name', authenticateToken, (req, res) => {
 // ---------------------- ITEMS IN COLLECTIONS ----------------------
 
 // Get all items in a collection
-app.get('/collections/:name/documents', authenticateToken, (req, res) => {
+app.get('/collections/:name/documents/', authenticateToken, (req, res) => {
     const data = readFile('./users/' + req.user.id + '/db.json');
     //readData();
     // console.log(data);
     const { name } = req.params;
+    // console.log(name);
     res.json(data.collections[name]?.documents || {});
 });
+// app.get('/collections/:name/documents/:name2/documents', authenticateToken, (req, res) => {
+//     const data = readFile('./users/' + req.user.id + '/db.json');
+//     //readData();
+//     // console.log(data);
+//     const { name } = req.params;
+//     res.json(data.collections[name]?.documents || {});
+// });
+
+// app.get('/collections/:name/documents/:name2/:name3/documents', authenticateToken, (req, res) => {
+//     const data = readFile('./users/' + req.user.id + '/db.json');
+//     //readData();
+//     // console.log(data);
+//     const { name } = req.params;
+//     res.json(data.collections[name]?.documents || {});
+// });
 // app.get('/collections/:name/items', (req, res) => {
 //     const data = readData();
 //     const name = req.params.name;
@@ -464,6 +568,82 @@ async function getPublicIP() {
         return "0.0.0.0"; // Fallback to listening on all interfaces
     }
 }
+
+// Get collection (including subcollections)
+// app.get("/collections1/:collectionPath(*)", authenticateToken, (req, res) => {
+//     // const db = loadDatabase();
+//     const db = readFile('./users/' + req.user.id + '/db.json');
+//     const collectionPath = req.params.collectionPath.split("/"); // Allow nested paths
+//     console.log(collectionPath);
+//     let collection = db;
+//     for (const segment of collectionPath) {
+//         console.log(collection[segment].documents);
+//         if (!collection[segment]) {
+//             return res.status(404).json({ error: "Collection not found" });
+//         }
+//         collection = collection[segment];
+//     }
+
+//     res.json(collection);
+// });
+
+// Update document in a subcollection
+// app.put("/collections/:collectionPath(*)/:docId", authenticateToken, (req, res) => {
+//     // const db = loadDatabase();
+//     const db = readFile('./users/' + req.user.id + '/db.json');
+//     const collectionPath = req.params.collectionPath.split("/");
+//     const docId = req.params.docId;
+//     const updatedData = req.body;
+
+//     let collection = db;
+//     for (const segment of collectionPath) {
+//         if (!collection[segment]) {
+//             return res.status(404).json({ error: "Collection not found" });
+//         }
+//         collection = collection[segment];
+//     }
+
+//     if (!collection[docId]) {
+//         return res.status(404).json({ error: "Document not found" });
+//     }
+
+//     // Update the document
+//     collection[docId] = { ...collection[docId], ...updatedData };
+//     // saveDatabase(db);
+//     writeFile('./users/' + req.user.id + '/db.json', db);
+
+//     res.json({ success: true, updatedDocument: collection[docId] });
+// });
+
+// Add a new subcollection inside a document
+// app.post("/collections/:collectionPath(*)/:docId/subcollections/:subCollection", authenticateToken, (req, res) => {
+//     // const db = loadDatabase();
+//     const db = readFile('./users/' + req.user.id + '/db.json');
+//     const collectionPath = req.params.collectionPath.split("/");
+//     const docId = req.params.docId;
+//     const subCollection = req.params.subCollection;
+
+//     let collection = db;
+//     for (const segment of collectionPath) {
+//         if (!collection[segment]) {
+//             return res.status(404).json({ error: "Collection not found" });
+//         }
+//         collection = collection[segment];
+//     }
+
+//     if (!collection[docId]) {
+//         return res.status(404).json({ error: "Document not found" });
+//     }
+
+//     if (!collection[docId][subCollection]) {
+//         collection[docId][subCollection] = {};
+//     }
+
+//     // saveDatabase(db);
+//     writeFile('./users/' + req.user.id + '/db.json', db);
+//     res.json({ success: true, message: "Subcollection added successfully" });
+// });
+
 // ---------------------- START SERVER ----------------------
 
 app.listen(port, () => {
