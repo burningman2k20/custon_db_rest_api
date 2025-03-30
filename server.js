@@ -646,13 +646,13 @@ async function getPublicIP() {
 
 // ---------------------- START SERVER ----------------------
 
-// app.listen(port, () => {
-//     console.log(`Server running at http://10.0.0.202:${port}`);
-// });
+app.listen(port, () => {
+    console.log(`Server running at http://10.0.0.202:${port}`);
+});
 
 // Start the server after fetching the IP
-getPublicIP().then((ip) => {
-    app.listen(port, ip, () => {
-        console.log(`Server running at http://${ip}:${port}`);
-    });
-});
+// getPublicIP().then((ip) => {
+//     app.listen(port, ip, () => {
+//         console.log(`Server running at http://${ip}:${port}`);
+//     });
+// });
