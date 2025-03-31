@@ -657,7 +657,7 @@ async function getPublicIP() {
 getPublicIP().then((ip) => {
     // var port = 80;
     port = 3000
-    ip = "0.0.0.0"
+    // ip = "0.0.0.0"
     // var ip = "localhost";
     app.listen(port, ip, () => {
         console.log(`Server running at http://${ip}:${port}`);
