@@ -4,8 +4,8 @@ const axios = require("axios");
 const fs = require('fs');
 const os = require("os");
 const path = require('path');
-const diskusage = require("diskusage-ng");
-const checkDiskSpace = require('check-disk-space').default
+// const diskusage = require("diskusage-ng");
+// const checkDiskSpace = require('check-disk-space').default
 
 const multer = require("multer");
 
@@ -15,7 +15,7 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
 const app = express();
-const port = 3000;
+var port = 3000;
 const dbFilePath = path.join(__dirname, 'db.json');
 
 const usersFilePath = path.join(__dirname, 'users.json');
@@ -651,8 +651,11 @@ app.listen(port, () => {
 });
 
 // Start the server after fetching the IP
-// getPublicIP().then((ip) => {
-//     app.listen(port, ip, () => {
-//         console.log(`Server running at http://${ip}:${port}`);
-//     });
-// });
+getPublicIP().then((ip) => {
+    // var port = 80;
+    port = 81
+    // var ip = "localhost";
+    app.listen(port, ip, () => {
+        console.log(`Server running at http://${ip}:${port}`);
+    });
+});

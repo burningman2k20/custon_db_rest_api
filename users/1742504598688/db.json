@@ -9,14 +9,7 @@
             "street": "123 Main St",
             "city": "New York",
             "found": "true",
-            "postalcode": "nothin",
-            "test": true
-          },
-          "test": "hello",
-          "testing1": "bye",
-          "testing32": true,
-          "testOBJ": {
-            "da": 33
+            "postalcode": "nothin"
           }
         },
         "user2": {
@@ -24,10 +17,7 @@
           "age": "281",
           "address": {
             "street": "456 Elm St",
-            "city": "Los Angeles",
-            "test": 444234,
-            "test2": false,
-            "test3": false
+            "city": "Los Angeles"
           }
         }
       }
