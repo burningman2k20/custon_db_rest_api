@@ -1,6 +1,9 @@
 const express = require('express');
 const axios = require("axios");
 
+// import https from 'https';
+const https = require('https');
+
 const fs = require('fs');
 const os = require("os");
 const path = require('path');
@@ -16,6 +19,13 @@ const cors = require('cors');
 
 const app = express();
 var port = 3000;
+
+// // Replace with your actual certificate paths
+const options = {
+    key: fs.readFileSync(path.join(__dirname, 'server.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'server.cert')),
+};
+
 const dbFilePath = path.join(__dirname, 'db.json');
 
 const usersFilePath = path.join(__dirname, 'users.json');
@@ -207,7 +217,7 @@ app.post('/auth/signup', async (req, res) => {
     if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { id: Date.now().toString(), email, password: hashedPassword };
+    const newUser = { id: Date.now().toString(), email, name: '', displayName: '', password: hashedPassword, admin: false };
 
     users.push(newUser); // Add the new user to the "database"
     writeUsersToFile(users); // Save the updated list of users
@@ -223,6 +233,7 @@ app.post('/auth/signup', async (req, res) => {
 // 👉 Login Route
 app.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
+    // console.log(email + ' ' + password);
     const users = readUsersFromFile();
 
     const user = users.find((u) => u.email === email);
@@ -231,8 +242,8 @@ app.post('/auth/login', async (req, res) => {
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) return res.status(401).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token, user: { email: user.email } });
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: '24h' });
+    res.json({ token, user: { email: user.email, displayName: user.displayName, admin: user.admin } });
 });
 
 // 👉 Logout Route (Client-Side)
@@ -241,11 +252,16 @@ app.post('/auth/logout', (req, res) => {
 });
 
 // 👉 Get Current User Route
-app.get('/auth/me', authenticateToken, (req, res) => {
-    const user = users.find((u) => u.id === req.user.id);
+app.get('/auth/me', authenticateToken, async (req, res) => {
+    const users = readUsersFromFile();
+    users.find((u) => {
+        // if (u.id === req.user.id) console.log('found user ' + u.email)
+        // console.log(u.email);
+    })
+    const user = await users.find((u) => u.id === req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    res.json({ user: { email: user.email } });
+    res.json({ user: { email: user.email, displayName: user.displayName } });
 });
 
 // 👉 Protected Route Example
@@ -654,12 +670,17 @@ async function getPublicIP() {
 // });
 
 // Start the server after fetching the IP
-getPublicIP().then((ip) => {
-    // var port = 80;
-    port = 3000
-    ip = "0.0.0.0"
-    // var ip = "localhost";
-    app.listen(port, ip, () => {
-        console.log(`Server running at http://${ip}:${port}`);
-    });
+// getPublicIP().then((ip) => {
+// var port = 80;
+port = 3000
+ip = "0.0.0.0"
+// var ip = "localhost";
+app.listen(port, ip, () => {
+    console.log(`Server running at http://${ip}:${port}`);
 });
+// });
+
+// Bind to 0.0.0.0 to listen on all interfaces
+// https.createServer(options, app).listen(443, ip, () => {
+//     console.log('HTTPS Server is running on https://0.0.0.0:443');
+// });

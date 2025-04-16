@@ -3,12 +3,16 @@
         "id": "1742504598688",
         "email": "ignite01@hotmail.com",
         "name": "dave",
-        "password": "$2b$10$LJpZdVcRXvtZD5zbRB9rG.QkCNPimUzNwp4wY8nU5T9ZsxKIcg8w2"
+        "displayName": "David",
+        "password": "$2b$10$LJpZdVcRXvtZD5zbRB9rG.QkCNPimUzNwp4wY8nU5T9ZsxKIcg8w2",
+        "admin": true
     },
     {
         "id": "1742518533395",
         "email": "burningman2k9@gmail.com",
         "name": "burningman",
-        "password": "$2b$10$u5mmnsA810hb2duh4vLcduONw/4wF22lvzFiTaJ1xQACletQchdE6"
+        "displayName": "BurningMan",
+        "password": "$2b$10$u5mmnsA810hb2duh4vLcduONw/4wF22lvzFiTaJ1xQACletQchdE6",
+        "admin": false
     }
 ]

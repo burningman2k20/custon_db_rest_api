@@ -9,15 +9,41 @@
             "street": "123 Main St",
             "city": "New York",
             "found": "true",
-            "postalcode": "nothin"
-          }
+            "postalcode": "nothin",
+            "testdate2": "2025-04-11 14:00"
+          },
+          "sss": [
+            "ss",
+            "fsdffd",
+            ""
+          ],
+          "testing4": "",
+          "testing41": 0,
+          "testing411": false,
+          "aaa": "",
+          "dasd": "",
+          "dasdasdasdsa": "",
+          "testdate2": "2025-04-14 15:00",
+          "testdate211": false,
+          "5fadfda": 0,
+          "adadasd": false
         },
         "user2": {
           "name": "Jane Doe",
           "age": "281",
           "address": {
             "street": "456 Elm St",
-            "city": "Los Angeles"
+            "city": "Los Angeles",
+            "Age": 45,
+            "Testarray": [
+              {
+                "Fsff": ""
+              },
+              {
+                "1": [],
+                "sa": ""
+              }
+            ]
           }
         }
       }
@@ -40,19 +66,14 @@
     "TVShows": {
       "documents": {
         "StarGateSG1": {
-          "Actors": "Richard Dean Anderson, Amanda Tapping"
-        }
-      }
-    },
-    "TestCollection": {
-      "documents": {
-        "testing2": {
-          "test1": {
-            "test2": "ds"
-          },
-          "test2": {
-            "test1": "das"
-          }
+          "Bool": false,
+          "Actors": [
+            "Richard Dean Anderson",
+            "Amanda Tapping"
+          ],
+          "Locations": [
+            "British Columbia, Canada"
+          ]
         }
       }
     }

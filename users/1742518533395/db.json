@@ -1,7 +1,121 @@
 {
   "collections": {
     "feasf": {
-      "documents": {}
+      "documents": {
+        "testing1": {
+          "name": "testing????aa",
+          "object": {
+            "ass": {
+              "0": 25,
+              "ass": true,
+              "asses": true,
+              "dumbfuck": true,
+              "bool": false,
+              "stringy": "thingy",
+              "fucky": "assy",
+              "cada": "",
+              "fasksd": "ssss",
+              "testa": "",
+              "testass": "",
+              "dasd": "",
+              "fee": "",
+              "feefd": false
+            },
+            "test": 12111,
+            "fafadadadasd": {
+              "0": "",
+              "dsadasd": "testvalue",
+              "stringy": "fasdfaaaa",
+              "fucky": "dasda",
+              "dsadas": "",
+              "tetst": ""
+            },
+            "testy": [
+              {
+                "dsda": "",
+                "dsadas": "new string"
+              },
+              {
+                "hgfk": "new string"
+              },
+              {
+                "test": "new string",
+                "da": 0
+              },
+              null,
+              null,
+              null
+            ],
+            "tes": [
+              "testass",
+              "dsadasd",
+              "",
+              ""
+            ]
+          },
+          "array": [
+            "sadasd123456789",
+            "dsada",
+            "dsa"
+          ]
+        },
+        "testing2": {
+          "dasd": "dasd"
+        },
+        "cxzc": {
+          "testing4": 522,
+          "testin2": "gshth",
+          "test": false,
+          "testt": [
+            111,
+            13121,
+            321
+          ],
+          "d": "aa"
+        }
+      }
+    },
+    "TV Shows": {
+      "documents": {
+        "Stargate SG-1": {
+          "Actors": [
+            "Richard Dean Anderson",
+            "Amanda Tapping",
+            "Micheal Shanks"
+          ],
+          "Main Shooting Location": "Vancouver, BC, Canada",
+          "objects": {
+            "array": [
+              "one",
+              "two"
+            ],
+            "new objects": [
+              "one",
+              "two",
+              "three"
+            ],
+            "dd": [
+              {
+                "0": "new string",
+                "test": false,
+                "fa": "new string",
+                "dss": 0
+              },
+              0,
+              {
+                "s": "new string"
+              }
+            ]
+          }
+        }
+      }
     }
+  },
+  "feasf": {
+    "documents": [
+      "sadasd123456",
+      "dsada",
+      "dsa"
+    ]
   }
 }
