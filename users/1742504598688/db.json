@@ -12,21 +12,7 @@
             "postalcode": "nothin",
             "testdate2": "2025-04-11 14:00"
           },
-          "sss": [
-            "ss",
-            "fsdffd",
-            ""
-          ],
-          "testing4": "",
-          "testing41": 0,
-          "testing411": false,
-          "aaa": "",
-          "dasd": "",
-          "dasdasdasdsa": "",
-          "testdate2": "2025-04-14 15:00",
-          "testdate211": false,
-          "5fadfda": 0,
-          "adadasd": false
+          "testdate2": "2025-04-14 03:00"
         },
         "user2": {
           "name": "Jane Doe",
@@ -34,16 +20,7 @@
           "address": {
             "street": "456 Elm St",
             "city": "Los Angeles",
-            "Age": 45,
-            "Testarray": [
-              {
-                "Fsff": ""
-              },
-              {
-                "1": [],
-                "sa": ""
-              }
-            ]
+            "Age": 45
           }
         }
       }
@@ -53,8 +30,7 @@
         "product1": {
           "name": "Laptop",
           "price": 1200,
-          "stock": 10,
-          "test": "true"
+          "stock": 10
         },
         "product2": {
           "name": "Phone",
@@ -66,14 +42,15 @@
     "TVShows": {
       "documents": {
         "StarGateSG1": {
-          "Bool": false,
           "Actors": [
             "Richard Dean Anderson",
-            "Amanda Tapping"
+            "Amanda Tapping",
+            "Micheal Shanks"
           ],
           "Locations": [
             "British Columbia, Canada"
-          ]
+          ],
+          "Still Active": false
         }
       }
     }
