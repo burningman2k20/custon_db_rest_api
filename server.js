@@ -565,14 +565,14 @@ const fuzzymatch = (target, term) => {
 // });
 
 // Start the server after fetching the IP
-getPublicIP().then((ip) => {
-    port = 80
-    // ip = "0.0.0.0"
-    // var ip = "localhost";
-    app.listen(port, ip, () => {
-        console.log(`Server running at http://${ip}:${port}`);
-    });
+// getPublicIP().then((ip) => {
+port = 80
+ip = "0.0.0.0"
+// var ip = "localhost";
+app.listen(port, ip, () => {
+    console.log(`Server running at http://${ip}:${port}`);
 });
+// });
 
 // Bind to 0.0.0.0 to listen on all interfaces
 // https.createServer(options, app).listen(443, ip, () => {
