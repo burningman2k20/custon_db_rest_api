@@ -12,7 +12,12 @@
             "postalcode": "nothin",
             "testdate2": "2025-04-11 14:00"
           },
-          "testdate2": "2025-04-14 03:00"
+          "testdate2": "2025-04-14 03:00",
+          "name2": "nothing burger",
+          "was": 0,
+          "testarray": [
+            "ddsad"
+          ]
         },
         "user2": {
           "name": "Jane Doe",
@@ -22,6 +27,23 @@
             "city": "Los Angeles",
             "Age": 45
           }
+        },
+        "test": {
+          "array": [
+            "2as",
+            "'lh;jbj",
+            "uvh",
+            "testing4"
+          ],
+          "name": "some name",
+          "subDoc": {
+            "name": "some other name",
+            "value": "some other value"
+          },
+          "value": "some value"
+        },
+        "new": {
+          "name": "joseph g doe"
         }
       }
     },
@@ -52,6 +74,17 @@
           ],
           "Still Active": false
         }
+      }
+    },
+    "new users": {
+      "documents": {
+        "7cf3dc7c-5a61-4e82-9a85-50ef8ddd3d3c": {
+          "sa": "sd"
+        },
+        "ee537b29-3bf9-45d0-aac1-e77f4e8ab0aa": {
+          "fds": "fsdaf"
+        },
+        "a45fc407-923c-40d7-9578-31abbdc3daa5": {}
       }
     }
   }

@@ -1,14 +1,11 @@
 const express = require('express');
 const axios = require("axios");
 
-// import https from 'https';
 const https = require('https');
 
 const fs = require('fs');
 const os = require("os");
 const path = require('path');
-// const diskusage = require("diskusage-ng");
-// const checkDiskSpace = require('check-disk-space').default
 
 const multer = require("multer");
 
@@ -108,7 +105,6 @@ app.use((req, res, next) => {
 
 const SECRET_KEY = 'your_secret_key'; // Use a secure key in production
 
-
 // Mock database
 let users = [];
 
@@ -133,15 +129,6 @@ app.get("/user/storage", authenticateToken, (req, res) => {
         available: USER_STORAGE_LIMIT - usedStorage
     });
 });
-
-// // 📌 API Route to Get Storage Info
-// app.get("/storage", (req, res) => {
-//     const storageInfo = getAvailableStorage();
-//     res.json({
-//         totalSpace: storageInfo.total,
-//         availableSpace: storageInfo.available,
-//     });
-// });
 
 // 📌 API Route to Get File Size
 app.get("/filesize/:filename", authenticateToken, (req, res) => {
@@ -311,50 +298,6 @@ app.put("/collections/:name/:docId", authenticateToken, (req, res) => {
     res.json({ success: true });
 });
 
-// // Get subcollections
-// app.get("/collections/:name/:subCollection", authenticateToken, (req, res) => {
-//     const db = readFile('./users/' + req.user.id + '/db.json');
-//     //loadDB();
-//     const collection = db[req.params.name] || {};
-//     res.json(collection[req.params.subCollection] || {});
-// });
-// Create a new collection
-// app.post('/collections/:name', (req, res) => {
-//     const data = readFile('./users/' + req.user.id + '/db.json');
-//     const { name } = req.params;
-//     if (!data.collections[name]) {
-//         data.collections[name] = { documents: {} };
-//         // writeData(data);
-//         writeFile('./users/' + req.user.id + '/db.json', data);
-//     }
-//     res.json({ message: `Collection ${name} created` });
-// });
-
-// 👉 Create a New Collection (Authenticated Route)
-// app.post('/collections/:name', authenticateToken, (req, res) => {
-//     const { items } = req.body;
-//     const name = req.params;
-//     const userId = req.user.id;
-
-//     console.log(req.body);
-//     console.log(req.params);
-//     // console.log(req.)
-
-//     let collections = [];
-//     let data = readFile('./users/' + userId + '/db.json');
-//     // Read collections from collections.json
-
-
-//     console.log(Array.isArray(data));
-
-//     const newCollection = { userId, name, items: items || [] };
-//     data.push(newCollection);
-
-//     // Write updated collections to the file
-//     writeFile('./users/' + userId + '/db.json', data);
-
-//     res.status(201).json({ message: 'Collection created successfully', collection: newCollection });
-// });
 app.post('/collections/:name', authenticateToken, (req, res) => {
     const data = readFile('./users/' + req.user.id + '/db.json');
     //readData();
@@ -400,39 +343,14 @@ app.get('/collections/:name/documents/', authenticateToken, (req, res) => {
     // console.log(name);
     res.json(data.collections[name]?.documents || {});
 });
-// app.get('/collections/:name/documents/:name2/documents', authenticateToken, (req, res) => {
-//     const data = readFile('./users/' + req.user.id + '/db.json');
-//     //readData();
-//     // console.log(data);
-//     const { name } = req.params;
-//     res.json(data.collections[name]?.documents || {});
-// });
-
-// app.get('/collections/:name/documents/:name2/:name3/documents', authenticateToken, (req, res) => {
-//     const data = readFile('./users/' + req.user.id + '/db.json');
-//     //readData();
-//     // console.log(data);
-//     const { name } = req.params;
-//     res.json(data.collections[name]?.documents || {});
-// });
-// app.get('/collections/:name/items', (req, res) => {
-//     const data = readData();
-//     const name = req.params.name;
-
-//     if (!data.collections[name]) {
-//         return res.status(404).send('Collection not found');
-//     }
-
-//     res.json(data.collections[name]);
-// });
 
 // Create a new document in a collection
 app.post('/collections/:name/documents/:docId', authenticateToken, (req, res) => {
     // const data = readData();
     const data = readFile('./users/' + req.user.id + '/db.json');
     const { name, docId } = req.params;
-    // console.log(req.params);
-    // console.log(req.body);
+    console.log(req.params);
+    console.log(req.body);
     const newDocument = req.body;
 
     if (!data.collections[name]) {
@@ -461,52 +379,13 @@ app.get('/collections/:name/documents/:docId', authenticateToken, (req, res) => 
     res.json(document);
 });
 
-// Get a single item from a collection by ID
-// app.get('/collections/:name/items/:id', (req, res) => {
-//     const data = readData();
-//     const name = req.params.name;
-//     const id = parseInt(req.params.id);
-
-//     if (!data.collections[name]) {
-//         return res.status(404).send('Collection not found');
-//     }
-
-//     const item = data.collections[name].find(item => item.id === id);
-//     if (!item) {
-//         return res.status(404).send('Item not found');
-//     }
-
-//     res.json(item);
-// });
-
-
-// Add an item to a collection
-// app.post('/collections/:name/items', (req, res) => {
-//     const data = readData();
-//     const name = req.params.name;
-
-//     if (!data.collections[name]) {
-//         return res.status(404).send('Collection not found');
-//     }
-
-//     const newItem = {
-//         id: data.collections[name].length
-//             ? data.collections[name][data.collections[name].length - 1].id + 1
-//             : 1,
-//         name: req.body.name
-//     };
-
-//     data.collections[name].push(newItem);
-//     writeData(data);
-//     res.status(201).json(newItem);
-// });
-
-
 // Update a document in a collection
 app.put('/collections/:name/documents/:docId', authenticateToken, (req, res) => {
     // const data = readData();
     const data = readFile('./users/' + req.user.id + '/db.json');
     const { name, docId } = req.params;
+    console.log(req.params)
+
 
     if (!data.collections[name]?.documents[docId]) {
         return res.status(404).json({ message: `Document ${docId} not found in collection ${name}` });
@@ -517,46 +396,6 @@ app.put('/collections/:name/documents/:docId', authenticateToken, (req, res) => 
     writeFile('./users/' + req.user.id + '/db.json', data);
     res.json({ message: `Document ${docId} updated in collection ${name}` });
 });
-
-// Update an item in a collection
-// app.put('/collections/:name/items/:id', (req, res) => {
-//     const data = readData();
-//     const name = req.params.name;
-//     const id = parseInt(req.params.id);
-
-//     if (!data.collections[name]) {
-//         return res.status(404).send('Collection not found');
-//     }
-
-//     const item = data.collections[name].find(item => item.id === id);
-//     if (!item) {
-//         return res.status(404).send('Item not found');
-//     }
-
-//     item.name = req.body.name;
-//     writeData(data);
-//     res.json(item);
-// });
-
-// // Delete an item from a collection
-// app.delete('/collections/:name/items/:id', (req, res) => {
-//     const data = readData();
-//     const name = req.params.name;
-//     const id = parseInt(req.params.id);
-
-//     if (!data.collections[name]) {
-//         return res.status(404).send('Collection not found');
-//     }
-
-//     const index = data.collections[name].findIndex(item => item.id === id);
-//     if (index === -1) {
-//         return res.status(404).send('Item not found');
-//     }
-
-//     const deletedItem = data.collections[name].splice(index, 1);
-//     writeData(data);
-//     res.json(deletedItem);
-// });
 
 // Delete a document from a collection
 app.delete('/collections/:name/documents/:docId', authenticateToken, (req, res) => {
@@ -574,6 +413,131 @@ app.delete('/collections/:name/documents/:docId', authenticateToken, (req, res) 
     res.json({ message: `Document ${docId} deleted from collection ${name}` });
 });
 
+function searchInObject(obj, term, basePath = '') {
+    let results = [];
+
+    for (const key in obj) {
+        const value = obj[key];
+        const path = basePath ? `${basePath}.${key}` : key;
+
+        // Check key match
+        if (key.includes(term)) {
+            results.push({ path, key, value });
+        }
+
+        // Check value match
+        if (typeof value === 'string' && value.includes(term)) {
+            results.push({ path, key, value });
+        }
+
+        // Recursively search in nested objects
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            results = results.concat(searchInObject(value, term, path));
+        }
+    }
+
+    return results;
+}
+
+
+app.get('/search', authenticateToken, async (req, res) => {
+    const term = req.query.term;
+    if (!term) return res.status(400).json({ error: 'Missing search term' });
+    if (term.length < 4) return res.status(400).json({ error: 'Search term to short' });
+
+    const userId = req.user.id;
+    const db = await readFile('./users/' + req.user.id + '/db.json');
+
+    const results = {};
+
+    for (const [docId, docData] of Object.entries(db.collections)) {
+        const matches = searchInObject(docData, term);
+        if (matches.length > 0) {
+            results[docId] = matches
+            // results.push({ documentId: docId, matches });
+        }
+    }
+
+    res.json(results);
+});
+
+
+app.get("/search-old", authenticateToken, async (req, res) => {
+    const { term } = req.query;
+    const userId = req.user.id;
+    const db = await readFile('./users/' + req.user.id + '/db.json');
+    //loadUserDatabase(userId);
+
+    const results = [];
+
+    const searchDocs = (collectionName, docs, results, pathPrefix = "") => {
+        var index = -1;
+        for (let doc in docs) {
+            index++;
+
+            // docs.forEach((doc, index) => {
+            console.log(index);
+            const matchedFields = [];
+
+            const scan = (obj, path = []) => {
+                for (let key in obj) {
+                    const value = obj[key];
+                    const fullPath = [...path, key];
+                    const fullKeyPath = fullPath.join(".");
+
+                    if (
+                        // fuzzymatch(key, term) ||
+                        (typeof value === "string")
+                        // && fuzzymatch(value, term)
+                    ) {
+                        matchedFields.push({ path: fullKeyPath, value });
+                    }
+
+                    if (typeof value === "object" && value !== null) {
+                        if (Array.isArray(value)) {
+                            value.forEach((item, i) => {
+                                if (typeof item === "object") scan(item, [...fullPath, i]);
+                            });
+                        } else {
+                            scan(value, fullPath);
+                        }
+                    }
+                }
+            };
+
+            scan(doc);
+
+            if (matchedFields.length) {
+                results.push({
+                    collection: `${pathPrefix}${collectionName}`,
+                    index,
+                    matches: matchedFields
+                });
+            }
+
+            // Handle nested collections inside this document
+            for (let key in doc) {
+                console.log(doc[key])
+                if (doc[key] && Array.isArray(doc[key])) { //&& typeof doc[key] === 'object'
+                    searchDocs(key, doc[key].documents, results, `${pathPrefix}${collectionName}/`);
+                    console.log(`${pathPrefix}${collectionName}/`)
+                    // searchDocs(key, doc[key], results, `${pathPrefix}${collectionName}/`);
+                }
+            }
+
+        }
+        // );
+    };
+
+    for (let [collectionName, docs] of Object.entries(db.collections)) {
+        // console.log(collectionName);
+        searchDocs(collectionName, docs, results);
+    }
+
+    res.json(results);
+});
+
+
 // Function to get the external (public) IP
 async function getPublicIP() {
     try {
@@ -585,80 +549,11 @@ async function getPublicIP() {
     }
 }
 
-// Get collection (including subcollections)
-// app.get("/collections1/:collectionPath(*)", authenticateToken, (req, res) => {
-//     // const db = loadDatabase();
-//     const db = readFile('./users/' + req.user.id + '/db.json');
-//     const collectionPath = req.params.collectionPath.split("/"); // Allow nested paths
-//     console.log(collectionPath);
-//     let collection = db;
-//     for (const segment of collectionPath) {
-//         console.log(collection[segment].documents);
-//         if (!collection[segment]) {
-//             return res.status(404).json({ error: "Collection not found" });
-//         }
-//         collection = collection[segment];
-//     }
-
-//     res.json(collection);
-// });
-
-// Update document in a subcollection
-// app.put("/collections/:collectionPath(*)/:docId", authenticateToken, (req, res) => {
-//     // const db = loadDatabase();
-//     const db = readFile('./users/' + req.user.id + '/db.json');
-//     const collectionPath = req.params.collectionPath.split("/");
-//     const docId = req.params.docId;
-//     const updatedData = req.body;
-
-//     let collection = db;
-//     for (const segment of collectionPath) {
-//         if (!collection[segment]) {
-//             return res.status(404).json({ error: "Collection not found" });
-//         }
-//         collection = collection[segment];
-//     }
-
-//     if (!collection[docId]) {
-//         return res.status(404).json({ error: "Document not found" });
-//     }
-
-//     // Update the document
-//     collection[docId] = { ...collection[docId], ...updatedData };
-//     // saveDatabase(db);
-//     writeFile('./users/' + req.user.id + '/db.json', db);
-
-//     res.json({ success: true, updatedDocument: collection[docId] });
-// });
-
-// Add a new subcollection inside a document
-// app.post("/collections/:collectionPath(*)/:docId/subcollections/:subCollection", authenticateToken, (req, res) => {
-//     // const db = loadDatabase();
-//     const db = readFile('./users/' + req.user.id + '/db.json');
-//     const collectionPath = req.params.collectionPath.split("/");
-//     const docId = req.params.docId;
-//     const subCollection = req.params.subCollection;
-
-//     let collection = db;
-//     for (const segment of collectionPath) {
-//         if (!collection[segment]) {
-//             return res.status(404).json({ error: "Collection not found" });
-//         }
-//         collection = collection[segment];
-//     }
-
-//     if (!collection[docId]) {
-//         return res.status(404).json({ error: "Document not found" });
-//     }
-
-//     if (!collection[docId][subCollection]) {
-//         collection[docId][subCollection] = {};
-//     }
-
-//     // saveDatabase(db);
-//     writeFile('./users/' + req.user.id + '/db.json', db);
-//     res.json({ success: true, message: "Subcollection added successfully" });
-// });
+const fuzzymatch = (target, term) => {
+    const t = String(term).toLowerCase();
+    const s = String(target).toLowerCase();
+    return s.includes(t) || t.split("").every(char => s.includes(char));
+};
 
 // ---------------------- START SERVER ----------------------
 
@@ -670,15 +565,14 @@ async function getPublicIP() {
 // });
 
 // Start the server after fetching the IP
-// getPublicIP().then((ip) => {
-// var port = 80;
-port = 80
-ip = "0.0.0.0"
-// var ip = "localhost";
-app.listen(port, ip, () => {
-    console.log(`Server running at http://${ip}:${port}`);
+getPublicIP().then((ip) => {
+    port = 80
+    // ip = "0.0.0.0"
+    // var ip = "localhost";
+    app.listen(port, ip, () => {
+        console.log(`Server running at http://${ip}:${port}`);
+    });
 });
-// });
 
 // Bind to 0.0.0.0 to listen on all interfaces
 // https.createServer(options, app).listen(443, ip, () => {
